@@ -55,17 +55,44 @@
 
 // GetElementsbyTAgName and GetElementsByClassName
 
-const item = document.getElementsByClassName("custom-list-group");
-item[0].textContent = "Added New Element";
-item[0].style.backgroundColor = "red";
-item[0].style.fontWeight = "bold";
+// const item = document.getElementsByClassName("custom-list-group");
+// item[0].textContent = "Added New Element";
+// item[0].style.backgroundColor = "red";
+// item[0].style.fontWeight = "bold";
 
 
-const items = document.getElementsByTagName("li");
+// const items = document.getElementsByTagName("li");
 
-items[4].textContent = "Item 5";
-items[4].style.backgroundColor = "green";
-items[4].style.fontWeight = "bold";
+// items[4].textContent = "Item 5";
+// items[4].style.backgroundColor = "green";
+// items[4].style.fontWeight = "bold";
+
+// ////////////////////////////////////////////////////////////////////////////////////
+
+// QuerySelector;
+
+    // const item2 = document.querySelector(".list-group-item:nth-child(2)");
+
+    // item2.style.backgroundColor = "green";
+
+    // const item3 = document.querySelector(".list-group-item:nth-child(3)");
+
+    // item3.style.display = "none";
+
+
+// QuerySelectorAll;
+
+const item = document.querySelectorAll("li:nth-child(2)");
+
+item[0].style.color = "green";
+
+
+const odd = document.querySelectorAll('li:nth-child(odd)');
+
+for (let i = 0; i < odd.length; i++){
+    odd[i].style.backgroundColor = "green";
+}
+
 
 
 
