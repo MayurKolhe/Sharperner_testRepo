@@ -40,22 +40,32 @@
 // heading.style.fontWeight = "bold";
 // heading.style.color = "green";
 
-const items = document.getElementsByClassName("list-group-item");
+// const items = document.getElementsByClassName("list-group-item");
 
-console.log(items);
+// console.log(items);
 
-items[1].textContent = "Mayur";
-items[1].style.backgroundColor = "yellow";
+// items[1].textContent = "Mayur";
+// items[1].style.backgroundColor = "yellow";
 
-for (let i = 0; i < items.length; i++){
-    items[i].style.backgroundColor = '#F4F4F4';
-    items[i].style.fontWeight = "bold";
-}
-
-items[2].style.backgroundColor = "green";
+// for (let i = 0; i < items.length; i++){
+//     items[i].style.backgroundColor = '#F4F4F4';
+//     items[i].style.fontWeight = "bold";
+// }
 
 
+// GetElementsbyTAgName and GetElementsByClassName
 
+const item = document.getElementsByClassName("custom-list-group");
+item[0].textContent = "Added New Element";
+item[0].style.backgroundColor = "red";
+item[0].style.fontWeight = "bold";
+
+
+const items = document.getElementsByTagName("li");
+
+items[4].textContent = "Item 5";
+items[4].style.backgroundColor = "green";
+items[4].style.fontWeight = "bold";
 
 
 
