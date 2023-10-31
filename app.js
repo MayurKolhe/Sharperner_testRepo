@@ -33,12 +33,28 @@
 
 // mainTitle.style.borderBottom = "solid 3px #000"
 
-const title = document.getElementsByClassName("title");
+// const title = document.getElementsByClassName("title");
 
-const heading = title[0];
+// const heading = title[0];
 
-heading.style.fontWeight = "bold";
-heading.style.color = "green";
+// heading.style.fontWeight = "bold";
+// heading.style.color = "green";
+
+const items = document.getElementsByClassName("list-group-item");
+
+console.log(items);
+
+items[1].textContent = "Mayur";
+items[1].style.backgroundColor = "yellow";
+
+for (let i = 0; i < items.length; i++){
+    items[i].style.backgroundColor = '#F4F4F4';
+    items[i].style.fontWeight = "bold";
+}
+
+items[2].style.backgroundColor = "green";
+
+
 
 
 
