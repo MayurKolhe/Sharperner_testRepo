@@ -181,6 +181,8 @@ const itemlist = document.getElementById("items");
 
 const itemsList = document.getElementsByClassName("list-group-item");
 
+const searchText = document.getElementById("filter");
+
 for (let i = 0; i < itemsList.length; i++) {
   const editButton = document.createElement("button");
   editButton.className = "btn btn-primary btn-sm float-right custom-action";
@@ -193,10 +195,16 @@ for (let i = 0; i < itemsList.length; i++) {
 const additems = (e) => {
   e.preventDefault();
   const newitem = document.getElementById("item").value;
+  const description = document.getElementById("description").value;
 
   const newli = document.createElement("li");
   newli.className = "list-group-item";
   newli.appendChild(document.createTextNode(newitem));
+
+  const newPara = document.createElement("span");
+  newPara.appendChild(document.createTextNode(" "+description));
+  newli.appendChild(newPara);
+  
   // Adding new Delete Button
   const delebutton = document.createElement("button");
   delebutton.className = "btn btn-danger btn-sm float-right delete";
@@ -208,6 +216,7 @@ const additems = (e) => {
   editButton.appendChild(document.createTextNode("Edit"));
   newli.append(editButton);
   itemlist.appendChild(newli);
+
 };
 
 
@@ -221,12 +230,34 @@ const deleteitems = (e) => {
 }
 
 
+const filteritems = (e) => {
+  e.preventDefault();
+  const text = e.target.value.toLowerCase();
+  
+  Array.from(itemsList).forEach(function (item) {
+    const children = item.children;
+    if (children.length >= 2) {
+      const itemName = children[0].textContent;
+      const description = children[1].textContent;
+      if (
+        itemName.toLowerCase().indexOf(text) !== -1 ||
+        description.toLowerCase().indexOf(text) !== -1
+      ) {
+        item.style.display = "block";
+      } else {
+        item.style.display = "none";
+      }
+    }
+  });
+};
+
 form.addEventListener("submit", additems);
 
 
 itemlist.addEventListener("click", deleteitems);
 
 
+searchText.addEventListener("keyup", filteritems);
 
 
 
