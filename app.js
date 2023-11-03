@@ -94,7 +94,7 @@
 // }
 
 
-let itemlist = document.querySelector('#items');
+// let itemlist = document.querySelector('#items');
 // console.log(itemlist.parentNode);
 // itemlist.parentNode.style.backgroundColor = "#f4f4f4";
 // console.log(itemlist. parentNode. parentNode. parentNode);
@@ -138,41 +138,96 @@ let itemlist = document.querySelector('#items');
 
 
 
-let newDiv = document.createElement('div');
-// Add class
-newDiv.className = 'hello';
-// Add id
-newDiv.id = 'helloworld';
-// Add attr
-newDiv.setAttribute('title', 'Hello Div');
-// Create text node
-let newDivText = document.createTextNode('Hello World');
+// let newDiv = document.createElement('div');
+// // Add class
+// newDiv.className = 'hello';
+// // Add id
+// newDiv.id = 'helloworld';
+// // Add attr
+// newDiv.setAttribute('title', 'Hello Div');
+// // Create text node
+// let newDivText = document.createTextNode('Hello World');
 
-// Add text to div
-newDiv.appendChild(newDivText);
+// // Add text to div
+// newDiv.appendChild(newDivText);
 
-let head = document.querySelector('header .container');
-let headtext = document.querySelector('header h1');
+// let head = document.querySelector('header .container');
+// let headtext = document.querySelector('header h1');
 
-newDiv.style.fontSize = "30px";
+// newDiv.style.fontSize = "30px";
 
-head.insertBefore(newDiv, headtext);
-// console.log(newDiv);
+// head.insertBefore(newDiv, headtext);
+// // console.log(newDiv);
 
-let newli = document.createElement('li');
+// let newli = document.createElement('li');
 
-newli.className = "list-group-item";
+// newli.className = "list-group-item";
 
-let newliText = document.createTextNode('Hello World');
+// let newliText = document.createTextNode('Hello World');
 
-newli.appendChild(newliText);
+// newli.appendChild(newliText);
 
-console.log(newli);
+// console.log(newli);
 
-let container = document.querySelector(".list-group");
-let firstele = document.querySelector(".list-group-item:nth-child(1)");
+// let container = document.querySelector(".list-group");
+// let firstele = document.querySelector(".list-group-item:nth-child(1)");
 
-container.insertBefore(newli , firstele);
+// container.insertBefore(newli , firstele);
+
+
+const form = document.getElementById("addForm");
+
+const itemlist = document.getElementById("items");
+
+const itemsList = document.getElementsByClassName("list-group-item");
+
+for (let i = 0; i < itemsList.length; i++) {
+  const editButton = document.createElement("button");
+  editButton.className = "btn btn-primary btn-sm float-right custom-action";
+  editButton.appendChild(document.createTextNode("Edit"));
+  itemsList[i].append(editButton);
+}
+
+
+
+const additems = (e) => {
+  e.preventDefault();
+  const newitem = document.getElementById("item").value;
+
+  const newli = document.createElement("li");
+  newli.className = "list-group-item";
+  newli.appendChild(document.createTextNode(newitem));
+  // Adding new Delete Button
+  const delebutton = document.createElement("button");
+  delebutton.className = "btn btn-danger btn-sm float-right delete";
+  delebutton.appendChild(document.createTextNode("X"));
+  newli.appendChild(delebutton);
+  // Adding new Edit Button
+  const editButton = document.createElement("button");
+  editButton.className = "btn btn-primary btn-sm float-right custom-action";
+  editButton.appendChild(document.createTextNode("Edit"));
+  newli.append(editButton);
+  itemlist.appendChild(newli);
+};
+
+
+const deleteitems = (e) => {
+  if (e.target.classList.contains('delete')) {
+    if (confirm("Are you sure want to exit")) {
+      const li = e.target.parentElement;
+      itemlist.removeChild(li);
+    }
+  }
+}
+
+
+form.addEventListener("submit", additems);
+
+
+itemlist.addEventListener("click", deleteitems);
+
+
+
 
 
 
