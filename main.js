@@ -6,7 +6,10 @@ const userList = document.querySelector("#users");
 
 const onSubmit = (e) => {
   e.preventDefault();
-  let currentvalue;
+    let currentvalue = {
+        name: "",
+        email:""
+  }
   if (nameInput === "" || emailInput === "") {
     msg.classList.add("error");
     msg.innerHTML("All fileds Are required");
@@ -18,17 +21,18 @@ const onSubmit = (e) => {
       document.createTextNode(`${nameInput.value}: ${emailInput.value}`)
     );
     userList.appendChild(li);
-    currentvalue = li.textContent;
+    currentvalue.name = nameInput.value;
+    currentvalue.email = emailInput.value;
     nameInput.value = "";
     emailInput.value = "";
   }
-  if (localStorage.getItem("itemlist")) {
-    let current = localStorage.getItem("itemlist");
-    current = current + ", " + currentvalue;
-    localStorage.setItem("itemlist", current);
-  } else {
-    localStorage.setItem("itemlist", currentvalue);
-  }
+    console.log(typeof (currentvalue));
+    
+    let current = JSON.stringify(currentvalue);
+
+    console.log(typeof current);
+
+  localStorage.setItem("itemlist", current);
 };
 
 myform.addEventListener("submit", onSubmit);
