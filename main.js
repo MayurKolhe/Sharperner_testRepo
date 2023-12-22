@@ -10,6 +10,19 @@ const axiosinstance = new axios.create({
   baseURL: `https://crudcrud.com/api/bf69353205fe4360b217c66e59f2c3c5`,
 });
 
+axiosinstance
+  .get(`/appointments`)
+  .then((res) =>
+    res.data.map((record) => {
+      showOutPut(record);
+    })
+  )
+  .catch((error) => {
+    document.body.innerHTML =
+      document.body.innerHTML + "<h4> Not Able to fetch the data</h4>";
+    console.log(error);
+  });
+
 const onSubmit = (e) => {
   e.preventDefault();
   let currentvalue = {
@@ -94,9 +107,11 @@ const showOutPut = (currentval) => {
 const getallappointments = () => {
   axiosinstance
     .get(`/appointments`)
-    .then((res) => res.data.map((record) => {
-      showOutPut(record);
-    }))
+    .then((res) =>
+      res.data.map((record) => {
+        showOutPut(record);
+      })
+    )
     .catch((error) => {
       document.body.innerHTML =
         document.body.innerHTML + "<h4> Not Able to fetch the data</h4>";
