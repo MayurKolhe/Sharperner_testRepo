@@ -2,7 +2,13 @@ const myform = document.getElementById("my-form");
 const nameInput = document.querySelector("#name");
 const emailInput = document.querySelector("#email");
 const msg = document.querySelector(".msg");
-const userList = document.getElementById("users");
+const appointmentsList = document.getElementById("Appointments");
+
+const Getappointment = document.getElementById("getappointment");
+
+const axiosinstance = new axios.create({
+  baseURL: `https://crudcrud.com/api/bf69353205fe4360b217c66e59f2c3c5`,
+});
 
 const onSubmit = (e) => {
   e.preventDefault();
@@ -13,36 +19,22 @@ const onSubmit = (e) => {
   if (nameInput === "" || emailInput === "") {
     msg.classList.add("error");
     msg.innerHTML("All fileds Are required");
-
     setTimeout(() => msg.remove, 3000);
   } else {
-    const li = document.createElement("li");
-    const delebutton = document.createElement("button");
-    const editButton = document.createElement("button");
-    delebutton.className = "btn btn-danger btn-sm float-right delete";
-    editButton.className = "btn btn-primary btn-sm float-right custom-action";
-    delebutton.appendChild(document.createTextNode("X"));
-    editButton.appendChild(document.createTextNode("Edit"));
-    li.appendChild(
-      document.createTextNode(`${nameInput.value}: ${emailInput.value}`)
-    );
-    li.appendChild(delebutton);
-    li.appendChild(editButton);
-    li.className = "item";
-    userList.appendChild(li);
     currentvalue.name = nameInput.value;
     currentvalue.email = emailInput.value;
     nameInput.value = "";
     emailInput.value = "";
   }
 
-  if (localStorage.getItem(currentvalue.email)) {
-    let current = localStorage.getItem(currentvalue.email);
-    current = current + ", " + JSON.stringify(currentvalue);
-    localStorage.setItem(currentvalue.email, current);
-  } else {
-    localStorage.setItem(currentvalue.email, JSON.stringify(currentvalue));
-  }
+  axiosinstance
+    .post("/appointments", currentvalue)
+    .then((res) => showOutPut(res.data))
+    .catch((error) => {
+      document.body.innerHTML =
+        document.body.innerHTML + "<h4> Something went wrong</h4>";
+      console.log(error);
+    });
 };
 
 myform.addEventListener("submit", onSubmit);
@@ -54,7 +46,7 @@ const deleteitems = (e) => {
       const data = li.textContent;
       const emailMatch = data.match(/: (.+)$/);
       let email = emailMatch[1];
-      userList.removeChild(li);
+      appointmentsList.removeChild(li);
       let key = emailMatch[1].substring(0, email.length - 1);
       localStorage.removeItem(key);
     }
@@ -74,7 +66,7 @@ const editButton = (e) => {
       console.log(email);
       let key = JSON.parse(localStorage.getItem(email));
       name = key.name;
-      userList.removeChild(li);
+      appointmentsList.removeChild(li);
       localStorage.removeItem(email);
     }
   }
@@ -82,12 +74,35 @@ const editButton = (e) => {
   emailInput.value = email;
 };
 
+const showOutPut = (currentval) => {
+  const li = document.createElement("li");
+  const delebutton = document.createElement("button");
+  const editButton = document.createElement("button");
+  delebutton.className = "btn btn-danger btn-sm float-right delete";
+  editButton.className = "btn btn-primary btn-sm float-right custom-action";
+  delebutton.appendChild(document.createTextNode("X"));
+  editButton.appendChild(document.createTextNode("Edit"));
+  li.appendChild(
+    document.createTextNode(`${currentval.name}: ${currentval.email}`)
+  );
+  li.appendChild(delebutton);
+  li.appendChild(editButton);
+  li.className = "item";
+  appointmentsList.appendChild(li);
+};
 
-userList.addEventListener("click", deleteitems);
-userList.addEventListener("click", editButton);
-// for (let i = 0; i < userList.length; i++) {
-//   const delebutton = document.createElement("button");
-//   delebutton.className = "btn btn-danger btn-sm float-right delete";
-//   delebutton.appendChild(document.createTextNode("X"));
-//   userList[i].appendChild(delebutton);
-// }
+const getallappointments = () => {
+  axiosinstance
+    .get(`/appointments`)
+    .then((res) => res.data.map((record) => {
+      showOutPut(record);
+    }))
+    .catch((error) => {
+      document.body.innerHTML =
+        document.body.innerHTML + "<h4> Not Able to fetch the data</h4>";
+      console.log(error);
+    });
+};
+appointmentsList.addEventListener("click", deleteitems);
+appointmentsList.addEventListener("click", editButton);
+Getappointment.addEventListener("click", getallappointments);
