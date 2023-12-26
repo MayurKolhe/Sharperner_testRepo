@@ -3,11 +3,13 @@ const nameInput = document.querySelector("#name");
 const emailInput = document.querySelector("#email");
 const msg = document.querySelector(".msg");
 const appointmentsList = document.getElementById("Appointments");
+let editId;
 
 const Getappointment = document.getElementById("getappointment");
+const Updateappointment = document.getElementById("updateappointment");
 
 const axiosinstance = new axios.create({
-  baseURL: `https://crudcrud.com/api/1f470c6b05b14d2ebe179ad8841025ce`,
+  baseURL: `https://crudcrud.com/api/7faf3fee8cce4db1a1ad709f304b44f9`,
 });
 
 
@@ -63,23 +65,18 @@ const deleteitems = (e) => {
 
 const editButton = (e) => {
   e.preventDefault();
-  let email = "";
-  let name = "";
   if (e.target.classList.contains("custom-action")) {
     if (confirm("Are you sure want to Edit")) {
       const li = e.target.parentElement;
       const data = li.textContent;
+      editId = li.id;
+      console.log('1111111', editId);
       const emailMatch = data.match(/: (.+)$/);
-      email = emailMatch[1].replace("Edit", "").replace("X", "");
-      console.log(email);
-      let key = JSON.parse(localStorage.getItem(email));
-      name = key.name;
       appointmentsList.removeChild(li);
-      localStorage.removeItem(email);
+      nameInput.value = data.split(":")[0];
+      emailInput.value = emailMatch[1].replace("Edit", "").replace("X", "");
     }
   }
-  nameInput.value = name;
-  emailInput.value = email;
 };
 
 const showOutPut = (currentval) => {
@@ -128,6 +125,37 @@ const getallappointments = () => {
       console.log(error);
     });
 };
+
+const updateappoits = () => {
+  if (editId) {
+    let currentvalue = {
+      name: "",
+      email: "",
+    };
+    if (nameInput.value === "" || emailInput.value === "") {
+      msg.classList.add("error");
+      msg.innerHTML("All fileds Are required");
+      setTimeout(() => msg.remove, 3000);
+    } else {
+      currentvalue.name = nameInput.value;
+      currentvalue.email = emailInput.value;
+      nameInput.value = "";
+      emailInput.value = "";
+    }
+    console.log("AAAA", editId);
+    axiosinstance
+      .put(`/appointments/${editId}`, currentvalue)
+      .then((res) => {
+          showOutPut(res.data);
+      })
+      .catch((error) => {
+        document.body.innerHTML =
+          document.body.innerHTML + "<h4> Not Able to fetch the data</h4>";
+        console.log(error);
+      });
+  }
+};
 appointmentsList.addEventListener("click", deleteitems);
 appointmentsList.addEventListener("click", editButton);
 Getappointment.addEventListener("click", getallappointments);
+Updateappointment.addEventListener("click", updateappoits);
