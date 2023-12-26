@@ -7,21 +7,10 @@ const appointmentsList = document.getElementById("Appointments");
 const Getappointment = document.getElementById("getappointment");
 
 const axiosinstance = new axios.create({
-  baseURL: `https://crudcrud.com/api/bf69353205fe4360b217c66e59f2c3c5`,
+  baseURL: `https://crudcrud.com/api/1f470c6b05b14d2ebe179ad8841025ce`,
 });
 
-axiosinstance
-  .get(`/appointments`)
-  .then((res) =>
-    res.data.map((record) => {
-      showOutPut(record);
-    })
-  )
-  .catch((error) => {
-    document.body.innerHTML =
-      document.body.innerHTML + "<h4> Not Able to fetch the data</h4>";
-    console.log(error);
-  });
+
 
 const onSubmit = (e) => {
   e.preventDefault();
@@ -56,13 +45,19 @@ const deleteitems = (e) => {
   if (e.target.classList.contains("delete")) {
     if (confirm("Are you sure want to exit")) {
       const li = e.target.parentElement;
-      const data = li.textContent;
-      const emailMatch = data.match(/: (.+)$/);
-      let email = emailMatch[1];
-      appointmentsList.removeChild(li);
-      let key = emailMatch[1].substring(0, email.length - 1);
-      localStorage.removeItem(key);
-    }
+      const deletetedId = li.id;
+      console.log(deletetedId)
+      if (deletetedId) {
+        appointmentsList.removeChild(li);
+        axiosinstance
+          .delete(`/appointments/${deletetedId}`)
+          .then((res) => {
+            console.log(res.data);
+            showOutPut(res.data);
+          })
+          .catch((error) => console.log(error));
+      }
+     } 
   }
 };
 
@@ -88,6 +83,14 @@ const editButton = (e) => {
 };
 
 const showOutPut = (currentval) => {
+  const existingItem = Array.from(appointmentsList.children).find((item) => {
+    return item._id === currentval._id;
+  });
+  if (existingItem) {
+    console.log("Response already exists:", currentval.email);
+    return;
+  }
+
   const li = document.createElement("li");
   const delebutton = document.createElement("button");
   const editButton = document.createElement("button");
@@ -95,23 +98,30 @@ const showOutPut = (currentval) => {
   editButton.className = "btn btn-primary btn-sm float-right custom-action";
   delebutton.appendChild(document.createTextNode("X"));
   editButton.appendChild(document.createTextNode("Edit"));
+
   li.appendChild(
-    document.createTextNode(`${currentval.name}: ${currentval.email}`)
+    document.createTextNode(
+      `${currentval.name}: ${currentval.email}`
+    )
   );
   li.appendChild(delebutton);
   li.appendChild(editButton);
   li.className = "item";
+  li.id = currentval._id;
   appointmentsList.appendChild(li);
 };
 
 const getallappointments = () => {
   axiosinstance
     .get(`/appointments`)
-    .then((res) =>
-      res.data.map((record) => {
-        showOutPut(record);
-      })
-    )
+    .then((res) => {
+      const serverAppointments = res.data;
+
+      // Append all appointments from the server to the list
+      serverAppointments.forEach((serverAppointment) => {
+        showOutPut(serverAppointment);
+      });
+    })
     .catch((error) => {
       document.body.innerHTML =
         document.body.innerHTML + "<h4> Not Able to fetch the data</h4>";
